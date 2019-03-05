@@ -90,7 +90,28 @@
       </div>
     </div>
     <div class="nav-bottom">
-
+      <div class="nav-bottom-wrap">
+        <div class="nav-bottom-list">
+          <router-link to="/discover" tag="span" class="bottom-list-item" exact-active-class="bottom-item-active">
+            <span class="bottom-list-item-text">推荐</span>
+          </router-link>
+          <router-link to="/discover/toplist" tag="span" class="bottom-list-item" exact-active-class="bottom-item-active">
+            <span class="bottom-list-item-text">排行榜</span>
+          </router-link>
+          <router-link to="/discover/playlist" tag="span" class="bottom-list-item" exact-active-class="bottom-item-active">
+            <span class="bottom-list-item-text">歌单</span>
+          </router-link>
+          <router-link to="/discover/djradio" tag="span" class="bottom-list-item" exact-active-class="bottom-item-active">
+            <span class="bottom-list-item-text">主播电台</span>
+          </router-link>
+          <router-link to="/discover/artist" tag="span" class="bottom-list-item" exact-active-class="bottom-item-active">
+            <span class="bottom-list-item-text">歌手</span>
+          </router-link>
+          <router-link to="/discover/album" tag="span" class="bottom-list-item" exact-active-class="bottom-item-active">
+            <span class="bottom-list-item-text">新碟上架</span>
+          </router-link>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -342,4 +363,51 @@ export default {
   margin-top: 8px;
   width: 120px;
 }
+
+/* 底部导航 */
+.nav-bottom {
+  height: 35px;
+  box-sizing: border-box;
+  background-color: #C20C0C;
+  border-bottom: 1px solid #a40011;
+}
+
+.nav-bottom-wrap {
+  width: 1100px;
+  height: 34px;
+  margin: 0 auto;
+}
+
+.nav-bottom-list {
+  float: left;
+  padding-left: 180px;
+}
+
+.bottom-list-item {
+  display: block;
+  float: left;
+  height: 34px;
+  text-align: center;
+  color: #ffffff;
+  font-size: 12px;
+}
+
+.bottom-list-item-text {
+  display: inline-block;
+  height: 20px;
+  padding: 0 13px;
+  margin: 7px 17px 0;
+  border-radius: 20px;
+  line-height: 21px;
+}
+
+.bottom-list-item-text:hover {
+  background: #9B0909;
+  cursor: pointer;
+}
+
+.bottom-item-active .bottom-list-item-text {
+  background: #9B0909;
+}
+
 </style>
