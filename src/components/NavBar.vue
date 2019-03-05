@@ -48,12 +48,42 @@
 
         <!-- 登录按钮 -->
         <div class="login">
+
           <router-link to="/login" class="login-text">登录</router-link>
+
           <div class="login-list">
             <div class="login-list-item">
-              <i class="login-list-item"></i>
+              <i class="login-list-icon phone"></i>
               <span class="login-list-text">手机号登录</span>
             </div>
+            <div class="login-list-item">
+              <i class="login-list-icon wx"></i>
+              <span class="login-list-text">微信登录</span>
+            </div>
+            <div class="login-list-item">
+              <i class="login-list-icon qq"></i>
+              <span class="login-list-text">QQ登录</span>
+            </div>
+            <div class="login-list-item">
+              <i class="login-list-icon wb"></i>
+              <span class="login-list-text">新浪微博登录</span>
+            </div>
+            <div class="login-list-item">
+              <i class="login-list-icon wy"></i>
+              <span class="login-list-text">网易邮箱账号登录</span>
+            </div>
+            <i class="login-icon"></i>
+          </div>
+
+
+
+        </div>
+
+        <router-link to="/create" class="create">创作者中心</router-link>
+
+        <div class="search">
+          <div class="search-wrap">
+            <input type="text" class="search-input" placeholder="音乐/视频/电台/用户">
           </div>
         </div>
 
@@ -166,7 +196,7 @@ export default {
   font-size: 11px;
   float: right;
   height: 45px;
-  margin: 19px 0 0 20px;
+  margin: 22px 0 0 20px;
   padding: 0 22px 0 0;
   background: url('../../public/img/topbar.png') no-repeat;
   background-position: right -50px;
@@ -185,15 +215,19 @@ export default {
 }
 
 .login-list {
+  display: none;
   position: absolute;
-  height: 196px;
-  top: 45px;
-  right: 65px;
+  top: 55px;
+  right: 79px;
   width: 158px;
   background: #2b2b2b;
   border: 1px solid #202020;
   box-shadow: 0 8px 24px 0 rgba(0,0,0,0.50);
   border-radius: 4px;
+}
+
+.login:hover .login-list {
+  display: block;
 }
 
 .login-list-item {
@@ -204,15 +238,108 @@ export default {
   padding-left: 24px;
   color: #ccc;
   line-height: 39px;
+  border-bottom: 1px solid #232323;
+}
+
+.login-list-item:hover {
+  background: #353535;
+  cursor: pointer;
 }
 
 .login-list-text {
+  float: left;
+  width: 100px;
   font-style: normal;
   text-align: left;
   font-size: inherit;
+  line-height: 38px;
 }
 
-.login-list-item {
+.login-list-icon {
+  float: left;
+  display: block;
+  width: 18px;
+  height: 18px;
+  margin: 10px 10px 0 -7px;
+  background: url('../../public/img/toplist.png') no-repeat;
+}
+
+.phone {
+  background-position: 0 0;
+}
+
+.wx {
+  background-position: -20px -20px;
+}
+
+.qq {
+  background-position: -20px -40px;
+}
+
+.wb {
+  background-position: 0 -20px;
+}
+
+.wy {
+  background-position: 0 -40px;
+}
+
+.login-icon {
+  display: block;
+  position: absolute;
+  top: -8px;
+  left: 50%;
+  width: 14px;
+  height: 8px;
+  margin-left: -7px;
+  background: url('../../public/img/toplist.png') no-repeat;
+  background-position: -20px 0;
+}
+
+/* 创作中心 */
+.create {
+  float: right;
+  font-size: 11px;
+  width: 90px;
+  height: 32px;
+  margin: 19px 0 0 12px;
+  box-sizing: border-box;
+  padding-left: 17px;
+  border: 1px solid #4F4F4F;
+  line-height: 30px;
+  color: #ccc;
+  border-radius: 20px;
+}
+
+.create:hover {
+  border: 1px solid #ffffff;
+  color: #ffffff;
+}
+
+/* 搜索框 */
+.search {
+  position: relative;
+  float: right;
+  width: 158px;
+  height: 32px;
+}
+
+.search-wrap {
+  float: right;
+  width: 158px;
+  height: 32px;
+  margin-top: 19px;
   background: url('../../public/img/topbar.png') no-repeat;
+  background-position: 0 -99px;
+  background-color: #fff;
+  border-radius: 32px;
+}
+
+.search-input {
+  font-size: 12px;
+  color: #333333;
+  margin-left: 25px;
+  margin-top: 8px;
+  width: 120px;
 }
 </style>
