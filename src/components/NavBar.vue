@@ -123,7 +123,7 @@ export default {
 </script>
 
 
-<style>
+<style scoped>
 .nav-bar {
   position: relative;
   left: 0;
@@ -245,6 +245,7 @@ export default {
   border: 1px solid #202020;
   box-shadow: 0 8px 24px 0 rgba(0,0,0,0.50);
   border-radius: 4px;
+  z-index: 30;
 }
 
 .login:hover .login-list {
