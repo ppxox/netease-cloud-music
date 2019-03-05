@@ -1,15 +1,20 @@
 import Vue from 'vue'
 import Router from 'vue-router'
+import MusicHome from './views/MusicHome/MusicHome.vue'
 
 Vue.use(Router)
 
 export default new Router({
   routes: [
-    // {
-    //   path: '/',
-    //   name: 'home',
-    //   component: Home
-    // },
+    {
+      path: '/',
+      redirect: '/discover',
+    },
+    {
+      path: '/discover',
+      name: 'discover',
+      component: MusicHome
+    }
     // {
     //   path: '/about',
     //   name: 'about',
