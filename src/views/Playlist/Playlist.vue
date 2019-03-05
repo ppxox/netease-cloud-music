@@ -11,6 +11,10 @@ export default {
   name: 'Playlist',
   components: {
     NavBar
+  },
+  created() {
+    // eslint-disable-next-line
+    // console.log(this.$route)
   }
 }
 </script>

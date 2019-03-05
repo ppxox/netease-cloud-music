@@ -61,6 +61,10 @@ export default new Router({
       component: Playlist
     },
     {
+      path: '/discover/playlist/:cat',
+      component: Playlist
+    },
+    {
       path: '/discover/djradio',
       name: 'djradio',
       component: Djradio

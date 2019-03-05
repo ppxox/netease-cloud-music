@@ -98,7 +98,7 @@
           <router-link to="/discover/toplist" tag="span" class="bottom-list-item" exact-active-class="bottom-item-active">
             <span class="bottom-list-item-text">排行榜</span>
           </router-link>
-          <router-link to="/discover/playlist" tag="span" class="bottom-list-item" exact-active-class="bottom-item-active">
+          <router-link to="/discover/playlist" tag="span" class="bottom-list-item" active-class="bottom-item-active">
             <span class="bottom-list-item-text">歌单</span>
           </router-link>
           <router-link to="/discover/djradio" tag="span" class="bottom-list-item" exact-active-class="bottom-item-active">
