@@ -5,7 +5,7 @@
     <div class="home-body">
       <div class="body-left">
         <HotRecommend :hotList="hotList"></HotRecommend>
-        <NewShelf></NewShelf>
+        <NewShelf :newShelfList="newShelfList"></NewShelf>
       </div>
       <div class="body-right"></div>
     </div>
@@ -23,7 +23,8 @@ export default {
   data() {
     return {
       banners: [],
-      hotList: []
+      hotList: [],
+      newShelfList: []
     }
   },
   components: {
@@ -47,6 +48,19 @@ export default {
         this.hotList = data.result.slice(0, 8);
       }
     });
+
+    // 新碟上架
+    this.axios.get('/api/album/newest')
+    .then(response => {
+      let data = response.data;
+      if (data.code === 200) {
+        let fList = data.albums.slice(0, 5);
+        let sList = data.albums.slice(5, 10);
+
+        this.newShelfList.push(sList, fList, sList, fList);
+      }
+
+    })
   }
 }
 </script>
