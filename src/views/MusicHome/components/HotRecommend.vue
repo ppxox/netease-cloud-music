@@ -2,11 +2,20 @@
   <div class="hot-recommend">
     <TabBar :title="title" :path="path" :tabList="tabList"></TabBar>
     <ul class="recommend-list">
-      <li class="item">
+      <li class="item" v-for="item in hotList" :key="item.id">
         <div class="img-wrap">
-          <img src="http://p1.music.126.net/D-TvG1LXc8mx_wvaHVVUjQ==/109951163903856167.jpg?param=140y140" class="auto-img">
+          <img :src="item.picUrl" class="auto-img">
+          <i class="like" v-if="item.highQuality"></i>
           <router-link to="/" class="link-wrap"></router-link>
+          <div class="bottom">
+            <span class="play-btn"></span>
+            <span class="icon-headset"></span>
+            <span class="count">{{parseInt(item.playCount / 10000)}}万</span>
+          </div>
         </div>
+        <p class="title">
+          <router-link to="/" class="title-text">{{item.name}}</router-link>
+        </p>
       </li>
     </ul>
   </div>
@@ -17,6 +26,7 @@ import TabBar from '../../../components/TabBar'
 
 export default {
   name: 'HotRecommend',
+  props: ['hotList'],
   components: {
     TabBar
   },
@@ -59,6 +69,7 @@ export default {
 
   .recommend-list {
     margin: 20px 0 0 -42px;
+    overflow: hidden;
   }
 
   .item {
@@ -83,5 +94,71 @@ export default {
     width: 100%;
     height: 100%;
     background: url('../../../../public/img/coverall.png') no-repeat;
+  }
+
+  .bottom {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 27px;
+    background: url('../../../../public/img/coverall.png') no-repeat;
+    background-position: 0 -537px;
+    color: #ccc;
+  }
+
+  .play-btn {
+    position: absolute;
+    right: 10px;
+    bottom: 5px;
+    width: 16px;
+    height: 17px;
+    background: url('../../../../public/img/iconall.png') no-repeat;
+    background-position: 0 0;
+  }
+
+  .icon-headset {
+    display: block;
+    float: left;
+    width: 14px;
+    height: 11px;
+    background: url('../../../../public/img/iconall.png') no-repeat;
+    background-position: 0 -24px;
+    margin: 9px 5px 9px 10px;
+  }
+
+  .count {
+    float: left;
+    margin-top: 8px;
+    font-size: 12px;
+  }
+
+  .title {
+    margin: 8px 0 3px;
+    font-size: 14px;
+    width: 100%;
+  }
+
+  .title-text {
+    display: inline-block;
+    max-width: 100%;
+    vertical-align: middle;
+  }
+
+  .title-text:hover {
+    text-decoration: underline;
+  }
+
+  .like {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 40px;
+    height: 40px;
+    background: url('../../../../public/img/icon2.png') no-repeat;
+    background-position: -135px -220px;
+    display: inline-block;
+    overflow: hidden;
+    vertical-align: middle;
   }
 </style>

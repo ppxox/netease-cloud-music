@@ -17,7 +17,22 @@
 <script>
 export default {
   name: "NavBar",
-  props: ["title", "tabList", "path"]
+  props: {
+    title: {
+      type: String,
+      default: ''
+    },
+    tabList: {
+      type: Array,
+      default() {
+        return []
+      }
+    },
+    path: {
+      type: String,
+      default: ''
+    }
+  }
 };
 </script>
 

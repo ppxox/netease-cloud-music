@@ -4,7 +4,8 @@
     <HomeBanner :list="banners"></HomeBanner>
     <div class="home-body">
       <div class="body-left">
-        <HotRecommend></HotRecommend>
+        <HotRecommend :hotList="hotList"></HotRecommend>
+        <NewShelf></NewShelf>
       </div>
       <div class="body-right"></div>
     </div>
@@ -15,24 +16,37 @@
 import NavBar from '../../components/NavBar'
 import HomeBanner from './components/HomeBanner'
 import HotRecommend from './components/HotRecommend'
+import NewShelf from './components/NewShelf'
 
 export default {
   name: 'MusicHome',
   data() {
     return {
-      banners: []
+      banners: [],
+      hotList: []
     }
   },
   components: {
     NavBar,
     HomeBanner,
-    HotRecommend
+    HotRecommend,
+    NewShelf
   },
   created() {
+    // 轮播图
     this.axios.get('/api/banner')
     .then(response => {
       this.banners = response.data.banners;
-    })
+    });
+
+    // 热门推荐
+    this.axios.get('/api/personalized')
+    .then(response => {
+      let data = response.data;
+      if (data.code === 200) {
+        this.hotList = data.result.slice(0, 8);
+      }
+    });
   }
 }
 </script>
