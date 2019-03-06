@@ -6,7 +6,7 @@
       <div class="body-left">
         <HotRecommend :hotList="hotList"></HotRecommend>
         <NewShelf :newShelfList="newShelfList"></NewShelf>
-        <Leaderboard :upBoard="upBoard" :newBoard="newBoard" :originalBoard="originalBoard"></Leaderboard>
+        <Leaderboard></Leaderboard>
       </div>
       <div class="body-right"></div>
     </div>
@@ -26,10 +26,7 @@ export default {
     return {
       banners: [],
       hotList: [],
-      newShelfList: [],
-      upBoard: {},
-      newBoard: {},
-      originalBoard: {}
+      newShelfList: []
     }
   },
   components: {
@@ -65,27 +62,6 @@ export default {
 
         this.newShelfList.push(sList, fList, sList, fList);
       }
-    })
-
-    // 云音乐飙升榜
-    this.axios.get('/api/top/list?idx=3')
-    .then(response => {
-      let data = response.data;
-      this.upBoard = data;
-    })
-
-    // 新歌榜
-    this.axios.get('/api/top/list?idx=0')
-    .then(response => {
-      let data = response.data;
-      this.newBoard = data;
-    })
-
-    // 原创版
-    this.axios.get('/api/top/list?idx=0')
-    .then(response => {
-      let data = response.data;
-      this.originalBoard = data;
     })
   }
 }
