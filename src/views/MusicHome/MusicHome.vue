@@ -6,6 +6,7 @@
       <div class="body-left">
         <HotRecommend :hotList="hotList"></HotRecommend>
         <NewShelf :newShelfList="newShelfList"></NewShelf>
+        <Leaderboard :upBoard="upBoard" :newBoard="newBoard" :originalBoard="originalBoard"></Leaderboard>
       </div>
       <div class="body-right"></div>
     </div>
@@ -17,6 +18,7 @@ import NavBar from '../../components/NavBar'
 import HomeBanner from './components/HomeBanner'
 import HotRecommend from './components/HotRecommend'
 import NewShelf from './components/NewShelf'
+import Leaderboard from './components/Leaderboard'
 
 export default {
   name: 'MusicHome',
@@ -24,14 +26,18 @@ export default {
     return {
       banners: [],
       hotList: [],
-      newShelfList: []
+      newShelfList: [],
+      upBoard: {},
+      newBoard: {},
+      originalBoard: {}
     }
   },
   components: {
     NavBar,
     HomeBanner,
     HotRecommend,
-    NewShelf
+    NewShelf,
+    Leaderboard
   },
   created() {
     // 轮播图
@@ -59,7 +65,27 @@ export default {
 
         this.newShelfList.push(sList, fList, sList, fList);
       }
+    })
 
+    // 云音乐飙升榜
+    this.axios.get('/api/top/list?idx=3')
+    .then(response => {
+      let data = response.data;
+      this.upBoard = data;
+    })
+
+    // 新歌榜
+    this.axios.get('/api/top/list?idx=0')
+    .then(response => {
+      let data = response.data;
+      this.newBoard = data;
+    })
+
+    // 原创版
+    this.axios.get('/api/top/list?idx=0')
+    .then(response => {
+      let data = response.data;
+      this.originalBoard = data;
     })
   }
 }
