@@ -6,9 +6,12 @@
         <div class="img-wrap">
           <img :src="item.picUrl" class="auto-img">
           <i class="like" v-if="item.highQuality"></i>
-          <router-link to="/" class="link-wrap"></router-link>
+          <router-link :to="{
+                              path: '/discover/playlist/detail',
+                              query: {id: item.id}}"
+                        class="link-wrap"></router-link>
           <div class="bottom">
-            <span class="play-btn"></span>
+            <span class="play-btn" @click="playMusic(item.id)"></span>
             <span class="icon-headset"></span>
             <span class="count">{{(parseInt(item.playCount / 10000)) >= 10 ? (parseInt(item.playCount / 10000)) + '万' : (parseInt(item.playCount))}}</span>
           </div>
@@ -55,7 +58,42 @@ export default {
           name: '电子',
           path: '/discover/playlist?cat=电子'
         },
-      ]
+      ],
+      musicList: []
+    }
+  },
+  methods: {
+    playMusic(id) {
+      this.axios.get('/api/playlist/detail?id=' + id)
+      .then(response => {
+        let list = response.data.privileges;
+        this.$store.commit('addMusicList', list);
+        this.musicList = list;
+      })
+    }
+  },
+  watch: {
+    musicList() {
+      let musicAudio = this.$store.state.audio;
+      let musicId = this.musicList[0].id;
+      this.axios.get('/api/song/url?id=' + musicId)
+      .then(response => {
+        let musicUrl = response.data.data[0].url;
+        musicAudio.src = musicUrl;
+        musicAudio.play();
+      })
+      let self = this
+      musicAudio.addEventListener('ended', function() {
+        self.$store.commit('addMusicIndex');
+        let index = self.$store.state.musicListIndex;
+        let id = self.musicList[index].id;
+        self.axios.get('/api/song/url?id=' + id)
+        .then(response => {
+          let musicUrl = response.data.data[0].url;
+          musicAudio.src = musicUrl;
+          musicAudio.play();
+        })
+      })
     }
   }
 }
@@ -115,6 +153,7 @@ export default {
     height: 17px;
     background: url('../../../../public/img/iconall.png') no-repeat;
     background-position: 0 0;
+    cursor: pointer;
   }
 
   .icon-headset {
