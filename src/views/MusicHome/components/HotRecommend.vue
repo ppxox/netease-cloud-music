@@ -66,9 +66,17 @@ export default {
     playMusic(id) {
       this.axios.get('/api/playlist/detail?id=' + id)
       .then(response => {
-        let list = response.data.privileges;
+        let list = response.data.playlist.tracks;
         this.$store.commit('addMusicList', list);
         this.musicList = list;
+      })
+    },
+    getMusicUrl(musicAudio, id) {
+      this.axios.get('/api/song/url?id=' + id)
+      .then(response => {
+        let musicUrl = response.data.data[0].url;
+        musicAudio.src = musicUrl;
+        musicAudio.play();
       })
     }
   },
@@ -76,24 +84,18 @@ export default {
     musicList() {
       let musicAudio = this.$store.state.audio;
       let musicId = this.musicList[0].id;
-      this.axios.get('/api/song/url?id=' + musicId)
-      .then(response => {
-        let musicUrl = response.data.data[0].url;
-        musicAudio.src = musicUrl;
-        musicAudio.play();
-      })
+
+      this.getMusicUrl(musicAudio, musicId);
+
       let self = this
+
       musicAudio.addEventListener('ended', function() {
         self.$store.commit('addMusicIndex');
         let index = self.$store.state.musicListIndex;
         let id = self.musicList[index].id;
-        self.axios.get('/api/song/url?id=' + id)
-        .then(response => {
-          let musicUrl = response.data.data[0].url;
-          musicAudio.src = musicUrl;
-          musicAudio.play();
-        })
+        self.getMusicUrl(this, id);
       })
+
     }
   }
 }
