@@ -19,7 +19,7 @@
     <div class="music-list-wrap">
       <ol class="music-list">
         <li class="music" v-for="(item, index) in list" :key="item.id">
-          <span class="num">{{index + 1}}</span>
+          <span class="num" :style="index > 2 ? 'color: #666666' : ''">{{index + 1}}</span>
           <router-link class="name" to="/">{{item.name}}</router-link>
           <div class="music-btn-wrap">
             <span class="music-play"></span>

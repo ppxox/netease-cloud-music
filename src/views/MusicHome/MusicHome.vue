@@ -8,8 +8,13 @@
         <NewShelf :newShelfList="newShelfList"></NewShelf>
         <Leaderboard></Leaderboard>
       </div>
-      <div class="body-right"></div>
+      <div class="body-right">
+        <LoginComponent></LoginComponent>
+        <EnteringSinger></EnteringSinger>
+      </div>
     </div>
+    <HomeBottom></HomeBottom>
+    <BottomBar></BottomBar>
   </div>
 </template>
 
@@ -19,6 +24,10 @@ import HomeBanner from './components/HomeBanner'
 import HotRecommend from './components/HotRecommend'
 import NewShelf from './components/NewShelf'
 import Leaderboard from './components/Leaderboard'
+import LoginComponent from './components/LoginComponent'
+import EnteringSinger from './components/EnteringSinger'
+import HomeBottom from './components/HomeBottom'
+import BottomBar from './components/BottomBar'
 
 export default {
   name: 'MusicHome',
@@ -34,7 +43,11 @@ export default {
     HomeBanner,
     HotRecommend,
     NewShelf,
-    Leaderboard
+    Leaderboard,
+    LoginComponent,
+    EnteringSinger,
+    HomeBottom,
+    BottomBar
   },
   created() {
     // 轮播图

@@ -10,7 +10,7 @@
           <div class="bottom">
             <span class="play-btn"></span>
             <span class="icon-headset"></span>
-            <span class="count">{{parseInt(item.playCount / 10000)}}万</span>
+            <span class="count">{{(parseInt(item.playCount / 10000)) >= 10 ? (parseInt(item.playCount / 10000)) + '万' : (parseInt(item.playCount))}}</span>
           </div>
         </div>
         <p class="title">
