@@ -6,5 +6,7 @@ export default {
   // 音乐列表索引
   musicListIndex: 0,
   // ended 事件
-  endedListener: null
+  endedListener: null,
+  // 正在播放的音乐 id
+  playingMusicId: null
 }

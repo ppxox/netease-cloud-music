@@ -40,8 +40,13 @@ export default {
     })
   },
 
-  // 清除 ended 事件
+  // 改变 endedListener
   changeEndedListener(state, funName) {
     state.endedListener = funName
+  },
+
+  // 修改正在播放音乐的 id
+  changePlayingMusicId(state, id) {
+    state.playingMusicId = id
   }
 }

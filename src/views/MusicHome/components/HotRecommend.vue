@@ -67,6 +67,7 @@ export default {
   },
   methods: {
 
+    // 获取歌单中的音乐列表添加到 vuex 中的 musicList 并开始播放列表中的第一首歌曲
     addMusicList(id) {
       this.axios.get("/api/playlist/detail?id=" + id).then(response => {
         let list = response.data.playlist.tracks;
@@ -78,7 +79,11 @@ export default {
 
         let musicId = this.$store.state.musicList[0].id;
 
-        this.playMusic(musicAudio, musicId);
+        this.axios.get("/api/song/url?id=" + musicId).then(response => {
+          let musicUrl = response.data.data[0].url;
+          musicAudio.src = musicUrl;
+          musicAudio.play();
+        });
 
         let self = this;
 
@@ -86,20 +91,12 @@ export default {
           self.$store.commit("addMusicIndex");
           let index = self.$store.state.musicListIndex;
           let id = self.$store.state.musicList[index].id;
-          self.getMusicUrl(this, id);
+          self.playMusic(this, id);
         };
 
         musicAudio.addEventListener("ended", endedListenerFun);
 
         this.$store.commit('changeEndedListener', endedListenerFun);
-      });
-    },
-
-    playMusic(musicAudio, id) {
-      this.axios.get("/api/song/url?id=" + id).then(response => {
-        let musicUrl = response.data.data[0].url;
-        musicAudio.src = musicUrl;
-        musicAudio.play();
       });
     }
 

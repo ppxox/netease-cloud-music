@@ -57,6 +57,7 @@ export default {
     }
   },
   methods: {
+    // 展示音乐播放列表
     showMusicList() {
       this.show = !this.show;
       let bar = this.$refs.bar;
@@ -68,6 +69,7 @@ export default {
       }
     },
 
+    // 双击切歌，修改 vuex 中的 musicIndex
     changeMusic(id, index) {
       let musicAudio = this.$store.state.audio;
       this.$store.commit("changeIndex", index);
@@ -78,12 +80,14 @@ export default {
       });
     },
 
+    // 显示音乐播放栏
     showBar() {
       let bar = this.$refs.bar;
       bar.style.transition = "all 0.2s linear";
       bar.style.transform = "translateY(0)";
     },
 
+    // 隐藏音乐播放栏
     hideBar() {
       if (this.barShow) {
         return;
@@ -94,18 +98,66 @@ export default {
     },
 
     removeMusic(id, index) {
-      if (index < this.$store.state.musicListIndex) {
+
+      // 获取 vuex 中的 audio 节点
+      let musicAudio = this.$store.state.audio;
+
+      // 如果列表索引等于 vuex 中音乐索引
+      if (index === this.$store.state.musicListIndex) {
+        // 音乐暂停
+        musicAudio.pause();
+        // 定义一个比 musicListIndex 大 1 的值 musicIndex
+        let musicIndex = this.$store.state.musicListIndex + 1;
+
+        // 如果 musicIndex 等于 musicListIndex
+        if (musicIndex === this.$store.state.musicListIndex) {
+          // 获取 musicList 音乐列表音乐的 id
+          let musicId = this.$store.state.musicList[musicIndex].id;
+          // 获取单曲详情
+          this.axios.get("/api/song/url?id=" + musicId).then(response => {
+            // 获取 url
+            let musicUrl = response.data.data[0].url;
+            // 播放新音乐
+            musicAudio.src = musicUrl;
+            musicAudio.play();
+          });
+        } else {
+          // 当删除最后一首正在播放中的音乐，创建一个比 musicListIndex 小 1 的值
+          let musicIndex = this.$store.state.musicListIndex - 1;
+
+          // 获取音乐 id
+          let musicId = this.$store.state.musicList[musicIndex].id;
+
+          // 修改 musicIndex 的值
+          this.$store.commit('changeIndex', musicIndex);
+
+          // 获取音乐地址(url)并播放
+          this.axios.get("/api/song/url?id=" + musicId).then(response => {
+            let musicUrl = response.data.data[0].url;
+            musicAudio.src = musicUrl;
+            musicAudio.play();
+          });
+        }
+
+      // 如果渲染列表索引小于 musicListIndex 就让 musicListIndex 的值减 1,控制播放中状态的样式
+      } else if (index < this.$store.state.musicListIndex) {
         this.$store.commit('lessMusicIndex');
       }
+
+      // 从列表中删除 id 相同的这首歌曲
       this.$store.commit("remodeMusic", id);
-      let musicAudio = this.$store.state.audio;
+
+      // 如果音乐列表的歌等于零，暂停音乐并把 ended 监听删除
       if (this.$store.state.musicList.length === 0) {
         musicAudio.pause();
         musicAudio.src = null;
         removeEventListener("ended", this.$store.state.endedListener);
+        this.$store.commit('changeEndedListener', null);
       }
+
     },
 
+    // 上一首
     prevMusic() {
       this.$store.commit("lessMusicIndex");
 
@@ -120,6 +172,7 @@ export default {
       });
     },
 
+    // 下一首
     nextMusic() {
       this.$store.commit("addMusicIndex");
 
