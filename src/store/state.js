@@ -1,5 +1,10 @@
 export default {
+  // 音乐列表
   musicList: [],
+  // 媒体元素
   audio: null,
-  musicListIndex: 0
+  // 音乐列表索引
+  musicListIndex: 0,
+  // ended 事件
+  endedListener: null
 }
