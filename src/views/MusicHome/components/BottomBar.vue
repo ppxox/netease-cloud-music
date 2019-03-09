@@ -122,7 +122,7 @@ export default {
         this.musicAudio.pause();
         this.$store.commit('changePlaying', false);
         // 定义一个比 musicListIndex 大 1 的值 musicIndex
-        let musicIndex = this.$store.state.musicListIndex + 1;
+        let musicIndex = this.$store.state.musicListIndex - 1;
 
         // 如果 musicIndex 等于 musicListIndex
         if (musicIndex === this.$store.state.musicListIndex) {
@@ -141,6 +141,14 @@ export default {
           // 当删除最后一首正在播放中的音乐，创建一个比 musicListIndex 小 1 的值
           let musicIndex = this.$store.state.musicListIndex - 1;
 
+          if (musicIndex < 0) {
+            musicIndex = 0;
+            this.$store.commit("remodeMusic", id);
+            if (this.$store.state.musicList.length === 0) {
+              return
+            }
+          }
+
           // 获取音乐 id
           let musicId = this.$store.state.musicList[musicIndex].id;
 
@@ -156,13 +164,15 @@ export default {
           });
         }
 
+        // 从列表中删除 id 相同的这首歌曲
+        this.$store.commit("remodeMusic", id);
+
       // 如果渲染列表索引小于 musicListIndex 就让 musicListIndex 的值减 1,控制播放中状态的样式
       } else if (index < this.$store.state.musicListIndex) {
         this.$store.commit('lessMusicIndex');
       }
 
-      // 从列表中删除 id 相同的这首歌曲
-      this.$store.commit("remodeMusic", id);
+
 
       // 如果音乐列表的歌等于零，暂停音乐并把 ended 监听删除
       if (this.$store.state.musicList.length === 0) {

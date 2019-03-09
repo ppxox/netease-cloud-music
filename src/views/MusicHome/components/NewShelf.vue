@@ -4,15 +4,13 @@
     <div class="banner">
       <div class="banner-wrap">
         <div class="cover-wrap">
-
           <div class="ul-wrap" ref="ulWrap">
-
             <ul class="list" v-for="(list, index) in newShelfList" :key="index">
               <li class="item" v-for="item in list" :key="item.id">
                 <div class="img-wrap">
                   <img :src="item.blurPicUrl" class="auto-img">
                   <router-link to="/" class="img-cover"></router-link>
-                  <router-link to="/" class="play-music" title="播放"></router-link>
+                  <a class="play-music" title="播放" @click="addMusicList(item.id)"></a>
                 </div>
                 <p class="title">
                   <router-link to="/" class="title-text">{{item.name}}</router-link>
@@ -25,7 +23,6 @@
                 </p>
               </li>
             </ul>
-
           </div>
         </div>
 
@@ -64,19 +61,19 @@ export default {
       this.index += 1;
       let ulWrap = this.$refs.ulWrap;
 
-      let self = this
+      let self = this;
 
       let callBack = function() {
         if (self.index > 2) {
-          this.style.transition = 'none';
+          this.style.transition = "none";
           self.index = 1;
           this.style.transform = `translateX(-${self.index * 645}px)`;
         }
 
-        ulWrap.removeEventListener('transitionend', callBack)
-      }
+        ulWrap.removeEventListener("transitionend", callBack);
+      };
 
-      ulWrap.addEventListener('transitionend', callBack)
+      ulWrap.addEventListener("transitionend", callBack);
 
       ulWrap.style.transition = "all 1s linear";
       ulWrap.style.transform = `translateX(-${this.index * 645}px)`;
@@ -85,21 +82,64 @@ export default {
       this.index -= 1;
       let ulWrap = this.$refs.ulWrap;
 
-      let self = this
+      let self = this;
 
       let callBack = function() {
         if (self.index === 0) {
-          this.style.transition = 'none';
+          this.style.transition = "none";
           self.index = 2;
           this.style.transform = `translateX(-${self.index * 645}px)`;
         }
-        ulWrap.removeEventListener('transitionend', callBack)
-      }
+        ulWrap.removeEventListener("transitionend", callBack);
+      };
 
-      ulWrap.addEventListener('transitionend', callBack)
+      ulWrap.addEventListener("transitionend", callBack);
 
       ulWrap.style.transition = "all 1s linear";
       ulWrap.style.transform = `translateX(-${this.index * 645}px)`;
+    },
+    addMusicList(id) {
+      this.axios.get("/api/album?id=" + id).then(response => {
+        let list = response.data.songs;
+
+        this.$store.commit("addMusicList", list);
+
+        this.$store.commit("changeIndex", 0);
+
+        let musicAudio = this.$store.state.audio;
+
+        musicAudio.pause();
+
+        musicAudio.src = null;
+
+        this.checkMusic(musicAudio);
+      });
+    },
+    checkMusic(musicAudio) {
+      let musicIndex = this.$store.state.musicListIndex;
+
+      let musicId = this.$store.state.musicList[musicIndex].id;
+
+      this.axios.get("/api/check/music?id=" + musicId)
+      .then(() => {
+        this.axios.get("/api/song/url?id=" + musicId)
+        .then(response => {
+          let musicUrl = response.data.data[0].url;
+
+          musicAudio.src = musicUrl;
+
+          musicAudio.play();
+
+          this.$store.commit("changePlaying", true);
+
+        });
+      })
+      .catch(() => {
+        this.$store.commit("remodeMusic", musicId);
+        if (this.$store.state.musicList.length) {
+          this.checkMusic();
+        }
+      });
     }
   }
 };
@@ -204,6 +244,7 @@ export default {
   height: 22px;
   background: url("../../../../public/img/iconall.png") no-repeat;
   background-position: 0 -85px;
+  cursor: pointer;
 }
 
 .img-wrap:hover .play-music {

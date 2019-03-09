@@ -79,8 +79,12 @@ export default {
 
         let musicId = this.$store.state.musicList[0].id;
 
-        this.axios.get("/api/song/url?id=" + musicId).then(response => {
+        this.axios.get("/api/song/url?id=" + musicId)
+        .then(response => {
           let musicUrl = response.data.data[0].url;
+          if (musicUrl === null) {
+            this.nextMusic();
+          }
           musicAudio.src = musicUrl;
           musicAudio.play();
           this.$store.commit('changePlaying', true);
@@ -92,12 +96,38 @@ export default {
           self.$store.commit("addMusicIndex");
           let index = self.$store.state.musicListIndex;
           let id = self.$store.state.musicList[index].id;
-          self.playMusic(this, id);
+          self.axios.get('/api/song/url?id=' + id)
+          .then(response => {
+            let url = response.data.data[0].url;
+            if (url === null) {
+              self.nextMusic(self)
+            }
+            musicAudio.src = url;
+            musicAudio.play();
+            self.$store.commit('changePlaying', true);
+          })
         };
 
         musicAudio.addEventListener("ended", endedListenerFun);
 
         this.$store.commit('changeEndedListener', endedListenerFun);
+      });
+    },
+
+    nextMusic(self) {
+      self.$store.commit("addMusicIndex");
+
+      let index = self.$store.state.musicListIndex;
+      let id = self.$store.state.musicList[index].id;
+
+      self.axios.get("/api/song/url?id=" + id).then(response => {
+        let musicUrl = response.data.data[0].url;
+        if (musicUrl === null) {
+          self.nextMusic();
+        }
+        self.musicAudio.src = musicUrl;
+        self.musicAudio.play();
+        self.$store.commit('changePlaying', true);
       });
     }
 
