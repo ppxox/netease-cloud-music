@@ -24,7 +24,7 @@
           <i class="iconfont icon-shangyishou icon" @click="prevMusic"></i>
         </div>
         <div class="icon-box">
-          <i class="iconfont icon-bofang icon"></i>
+          <i class="iconfont icon-bofang icon" :class="{'icon-zanting': $store.state.playing}" @click="pauseMusic"></i>
         </div>
         <div class="icon-box">
           <i class="iconfont icon-xiayishou icon" @click="nextMusic"></i>
@@ -40,15 +40,18 @@
 </template>
 
 <script>
+
 export default {
   name: "BottomBar",
   data() {
     return {
       show: false,
-      barShow: false
+      barShow: false,
+      musicAudio: null
     };
   },
   mounted() {
+    this.musicAudio = this.$refs.audio;
     this.$store.commit("getAudio", this.$refs.audio);
   },
   computed: {
@@ -71,13 +74,27 @@ export default {
 
     // 双击切歌，修改 vuex 中的 musicIndex
     changeMusic(id, index) {
-      let musicAudio = this.$store.state.audio;
+
       this.$store.commit("changeIndex", index);
       this.axios.get("/api/song/url?id=" + id).then(response => {
         let musicUrl = response.data.data[0].url;
-        musicAudio.src = musicUrl;
-        musicAudio.play();
+        if (musicUrl === null) {
+          this.nextMusic();
+        }
+        this.musicAudio.src = musicUrl;
+        this.musicAudio.play();
+        this.$store.commit('changePlaying', true);
       });
+    },
+
+    pauseMusic() {
+      if (this.$store.state.playing) {
+        this.musicAudio.pause();
+        this.$store.commit('changePlaying', false);
+      } else {
+        this.musicAudio.play();
+        this.$store.commit('changePlaying', true);
+      }
     },
 
     // 显示音乐播放栏
@@ -99,13 +116,11 @@ export default {
 
     removeMusic(id, index) {
 
-      // 获取 vuex 中的 audio 节点
-      let musicAudio = this.$store.state.audio;
-
       // 如果列表索引等于 vuex 中音乐索引
       if (index === this.$store.state.musicListIndex) {
         // 音乐暂停
-        musicAudio.pause();
+        this.musicAudio.pause();
+        this.$store.commit('changePlaying', false);
         // 定义一个比 musicListIndex 大 1 的值 musicIndex
         let musicIndex = this.$store.state.musicListIndex + 1;
 
@@ -118,8 +133,9 @@ export default {
             // 获取 url
             let musicUrl = response.data.data[0].url;
             // 播放新音乐
-            musicAudio.src = musicUrl;
-            musicAudio.play();
+            this.musicAudio.src = musicUrl;
+            this.musicAudio.play();
+            this.$store.commit('changePlaying', true);
           });
         } else {
           // 当删除最后一首正在播放中的音乐，创建一个比 musicListIndex 小 1 的值
@@ -134,8 +150,9 @@ export default {
           // 获取音乐地址(url)并播放
           this.axios.get("/api/song/url?id=" + musicId).then(response => {
             let musicUrl = response.data.data[0].url;
-            musicAudio.src = musicUrl;
-            musicAudio.play();
+            this.musicAudio.src = musicUrl;
+            this.musicAudio.play();
+            this.$store.commit('changePlaying', true);
           });
         }
 
@@ -149,8 +166,9 @@ export default {
 
       // 如果音乐列表的歌等于零，暂停音乐并把 ended 监听删除
       if (this.$store.state.musicList.length === 0) {
-        musicAudio.pause();
-        musicAudio.src = null;
+        this.musicAudio.pause();
+        this.$store.commit('changePlaying', false);
+        this.musicAudio.src = null;
         removeEventListener("ended", this.$store.state.endedListener);
         this.$store.commit('changeEndedListener', null);
       }
@@ -161,14 +179,17 @@ export default {
     prevMusic() {
       this.$store.commit("lessMusicIndex");
 
-      let audio = this.$store.state.audio;
       let index = this.$store.state.musicListIndex;
       let id = this.$store.state.musicList[index].id;
 
       this.axios.get("/api/song/url?id=" + id).then(response => {
         let musicUrl = response.data.data[0].url;
-        audio.src = musicUrl;
-        audio.play();
+        if (musicUrl === null) {
+          this.prevMusic();
+        }
+        this.musicAudio.src = musicUrl;
+        this.musicAudio.play();
+        this.$store.commit('changePlaying', true);
       });
     },
 
@@ -176,14 +197,17 @@ export default {
     nextMusic() {
       this.$store.commit("addMusicIndex");
 
-      let audio = this.$store.state.audio;
       let index = this.$store.state.musicListIndex;
       let id = this.$store.state.musicList[index].id;
 
       this.axios.get("/api/song/url?id=" + id).then(response => {
         let musicUrl = response.data.data[0].url;
-        audio.src = musicUrl;
-        audio.play();
+        if (musicUrl === null) {
+          this.nextMusic();
+        }
+        this.musicAudio.src = musicUrl;
+        this.musicAudio.play();
+        this.$store.commit('changePlaying', true);
       });
     }
   }

@@ -48,5 +48,9 @@ export default {
   // 修改正在播放音乐的 id
   changePlayingMusicId(state, id) {
     state.playingMusicId = id
+  },
+
+  changePlaying(state, boolean) {
+    state.playing = boolean
   }
 }

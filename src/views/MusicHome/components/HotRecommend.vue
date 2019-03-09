@@ -83,6 +83,7 @@ export default {
           let musicUrl = response.data.data[0].url;
           musicAudio.src = musicUrl;
           musicAudio.play();
+          this.$store.commit('changePlaying', true);
         });
 
         let self = this;

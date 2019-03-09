@@ -8,5 +8,7 @@ export default {
   // ended 事件
   endedListener: null,
   // 正在播放的音乐 id
-  playingMusicId: null
+  playingMusicId: null,
+  // 是否在播放
+  playing: false
 }
