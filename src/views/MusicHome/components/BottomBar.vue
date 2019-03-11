@@ -115,7 +115,7 @@ export default {
     },
 
     removeMusic(id, index) {
-
+      this.$store.commit("remodeMusic", id);
       // 如果列表索引等于 vuex 中音乐索引
       if (index === this.$store.state.musicListIndex) {
         // 音乐暂停
@@ -143,7 +143,7 @@ export default {
 
           if (musicIndex < 0) {
             musicIndex = 0;
-            this.$store.commit("remodeMusic", id);
+            // this.$store.commit("remodeMusic", id);
             if (this.$store.state.musicList.length === 0) {
               return
             }
@@ -165,7 +165,7 @@ export default {
         }
 
         // 从列表中删除 id 相同的这首歌曲
-        this.$store.commit("remodeMusic", id);
+        // this.$store.commit("remodeMusic", id);
 
       // 如果渲染列表索引小于 musicListIndex 就让 musicListIndex 的值减 1,控制播放中状态的样式
       } else if (index < this.$store.state.musicListIndex) {

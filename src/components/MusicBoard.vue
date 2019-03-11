@@ -22,7 +22,7 @@
           <span class="num" :style="index > 2 ? 'color: #666666' : ''">{{index + 1}}</span>
           <router-link class="name" to="/">{{item.name}}</router-link>
           <div class="music-btn-wrap">
-            <span class="music-play"></span>
+            <span class="music-play" @click="playMusic(item.id)"></span>
             <span class="add-music-to-list"></span>
             <span class="add-keep"></span>
           </div>
@@ -55,6 +55,23 @@ export default {
   data() {
     return {
       musicList: []
+    }
+  },
+  methods: {
+    playMusic(id) {
+      let audio = this.$store.state.audio;
+
+      this.axios.get('/api/song/detail?ids=' + id)
+      .then(response => {
+        let song = response.data.songs[0];
+        this.$store.commit('pushMusic', song)
+      })
+      this.axios.get('/api/song/url?id=' + id)
+      .then(response => {
+        audio.pause();
+        audio.src = response.data.data[0].url;
+        audio.play();
+      })
     }
   }
 }

@@ -5,6 +5,19 @@ export default {
     state.musicList = list
   },
 
+  pushMusic(state, song) {
+    const any = (arr, fn = Boolean) => arr.some(fn);
+    let isHave = any(state.musicList, x => x.id === song.id);
+    if (!isHave) {
+      state.musicList.push(song);
+    }
+    state.musicList.map((e, i) => {
+      if (e.id === song.id) {
+        state.musicListIndex = i;
+      }
+    })
+  },
+
   // 添加 audio 元素
   getAudio(state, el) {
     state.audio = el
