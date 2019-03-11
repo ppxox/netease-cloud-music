@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import MusicHome from './views/MusicHome/MusicHome.vue'
+import Discover from './views/Discover/Discover.vue'
 import MyMusic from './views/MyMusic/MyMusic.vue'
 import Friend from './views/Friend/Friend.vue'
 import Store from './views/Store/Store.vue'
@@ -18,12 +19,38 @@ export default new Router({
   routes: [
     {
       path: '/',
-      redirect: '/discover',
-    },
-    {
-      path: '/discover',
-      name: 'discover',
-      component: MusicHome
+      redirect: 'discover',
+      component: MusicHome,
+      children: [
+        {
+          path: 'discover',
+          component: Discover
+        },
+        {
+          path: 'discover/toplist',
+          component: Toplist
+        },
+        {
+          path: 'discover/playlist',
+          component: Playlist
+        },
+        {
+          path: '/discover/playlist',
+          component: Playlist
+        },
+        {
+          path: '/discover/djradio',
+          component: Djradio
+        },
+        {
+          path: '/discover/artist',
+          component: Artist
+        },
+        {
+          path: '/discover/album',
+          component: Album
+        }
+      ]
     },
     {
       path: '/mymusic',
@@ -49,39 +76,6 @@ export default new Router({
       path: '/download',
       name: 'download',
       component: DownloadPage
-    },
-    {
-      path: '/discover/toplist',
-      name: 'toplist',
-      component: Toplist
-    },
-    {
-      path: '/discover/playlist',
-      name: 'playlist',
-      component: Playlist
-    },
-    {
-      path: '/discover/playlist/:cat',
-      component: Playlist
-    },
-    {
-      path: '/discover/playlist/detail',
-      component: Playlist
-    },
-    {
-      path: '/discover/djradio',
-      name: 'djradio',
-      component: Djradio
-    },
-    {
-      path: '/discover/artist',
-      name: 'artist',
-      component: Artist
-    },
-    {
-      path: '/discover/album',
-      name: 'album',
-      component: Album
     }
     // {
     //   path: '/about',
