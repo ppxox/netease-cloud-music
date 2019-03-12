@@ -1,7 +1,6 @@
 <template>
   <div class="header">
-    <div v-if="createShow">正在加载...</div>
-    <div v-else class="header-wrap">
+    <div class="header-wrap">
       <div class="img-box">
         <img
           class="auto-img"
@@ -47,26 +46,6 @@
 <script>
 export default {
   name: "TopListHeader",
-  data() {
-    return {
-      createShow: true
-    }
-  },
-  created() {
-    this.axios.get('/api/playlist/detail?id=19723756')
-    .then(response => {
-      let data = response.data;
-      let obj = {};
-      let text = "每天更新";
-      obj.data = data;
-      obj.text = text;
-      this.$store.commit('changeTopListData', obj);
-      let ready = this.$store.state.topListData;
-      if (ready) {
-        this.createShow = false;
-      }
-    })
-  },
   computed: {
     list() {
       let list = this.$store.state.topListData.data.playlist;

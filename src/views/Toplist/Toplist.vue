@@ -6,8 +6,10 @@
         <SortList></SortList>
       </div>
 
-      <div class="wrap-right">
+      <div v-if="createShow">正在加载...</div>
+      <div v-else class="wrap-right">
         <TopListHeader></TopListHeader>
+        <MusicList></MusicList>
       </div>
 
     </div>
@@ -17,12 +19,19 @@
 <script>
 import SortList from './components/SortList'
 import TopListHeader from './components/TopListHeader'
+import MusicList from './components/MusicList'
 
 export default {
   name: 'Toplist',
   components: {
     SortList,
-    TopListHeader
+    TopListHeader,
+    MusicList
+  },
+  data() {
+    return {
+      createShow: true
+    }
   },
   created() {
     this.axios.get('/api/playlist/detail?id=19723756')
@@ -33,8 +42,12 @@ export default {
       obj.data = data;
       obj.text = text;
       this.$store.commit('changeTopListData', obj);
+      let ready = this.$store.state.topListData;
+      if (ready) {
+        this.createShow = false;
+      }
     })
-  },
+  }
 }
 </script>
 
