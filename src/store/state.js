@@ -10,5 +10,7 @@ export default {
   // 正在播放的音乐 id
   playingMusicId: null,
   // 是否在播放
-  playing: false
+  playing: false,
+  // 排行榜数据
+  topListData: null
 }

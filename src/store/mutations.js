@@ -65,5 +65,9 @@ export default {
 
   changePlaying(state, boolean) {
     state.playing = boolean
+  },
+
+  changeTopListData(state, data) {
+    state.topListData = data
   }
 }
