@@ -70,6 +70,8 @@ export default {
         obj.text = text;
         this.$store.commit('changeTopListData', obj);
       })
+
+      location.hash = "#top";
     },
     changeSecondClass(i, id, text) {
       this.sIndex = i;
@@ -83,6 +85,7 @@ export default {
         obj.text = text;
         this.$store.commit('changeTopListData', obj);
       })
+      location.hash = "#top";
     }
   }
 }

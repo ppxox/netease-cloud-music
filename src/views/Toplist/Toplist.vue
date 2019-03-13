@@ -1,12 +1,13 @@
 <template>
   <div class="top-list">
+    <a href="#top"></a>
     <div class="center-wrap">
 
       <div class="wrap-left">
         <SortList></SortList>
       </div>
 
-      <div v-if="createShow">正在加载...</div>
+      <div v-if="createShow" class="wrap-right"></div>
       <div v-else class="wrap-right">
         <TopListHeader></TopListHeader>
         <MusicList></MusicList>
@@ -73,6 +74,5 @@ export default {
 
   .wrap-right {
     flex: 0 0 740px;
-    padding-bottom: 50px;
   }
 </style>

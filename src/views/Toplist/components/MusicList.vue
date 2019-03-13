@@ -2,8 +2,8 @@
   <div class="music-list">
     <div class="music-list-title">
       <h3>歌曲列表</h3>
-      <span class="music-num">100首歌</span>
-      <div class="wrap">播放：<span class="play-count">100</span>次</div>
+      <span class="music-num">{{musicNum}}首歌</span>
+      <div class="wrap">播放：<span class="play-count">{{playCount}}</span>次</div>
     </div>
 
     <div class="list">
@@ -13,20 +13,30 @@
       <div class="singer">歌手</div>
     </div>
 
-    <!-- 前三样式 -->
-    <div class="item">
-      <div class="item-sort">1</div>
-      <div class="item-name">
+    <div
+      class="item"
+      :class="{'other-item': i >= 3, 'bg-color-gray': (i % 2) === 0}"
+      v-for="(item, i) in musicList"
+      :key="item.id"
+    >
+      <div
+        class="item-sort"
+        :class="{'other-sort': i >= 3}"
+      >{{i + 1}}</div>
+      <div class="item-name" :class="{'other-name': i >= 3}">
         <div class="item-name-wrap">
-          <div class="img-box">
-            <img src="http://p2.music.126.net/z-KH6R1-HP1lpCWSnmKy8Q==/109951163911444882.jpg?param=50y50&quality=100" class="auto-img">
+          <div class="img-box" v-if="i < 3">
+            <img :src="item.al.picUrl" class="auto-img">
           </div>
-          <span class="icon"></span>
-          <span class="music-name">多想在平庸的生活拥抱你</span>
+          <div class="display-none" v-else></div>
+          <span class="icon" :class="{'other-icon': i >= 3}"></span>
+          <span class="music-name" :class="{'other-name': i >= 3}">{{item.name}}</span>
         </div>
       </div>
-      <div class="item-time">
-        <span class="time-text">04:25</span>
+      <div class="item-time" :class="{'other-time': i >= 3}">
+        <span class="time-text">
+          {{ (item.dt / 1000 / 60) > 10 ? Math.floor(item.dt / 1000 / 60) : '0' + Math.floor(item.dt / 1000 / 60) }}:{{ (item.dt / 1000 % 60) > 10 ? Math.floor(item.dt / 1000 % 60) : '0' + Math.floor(item.dt / 1000 % 60) }}
+        </span>
         <span class="btn">
           <span class="icon-1"></span>
           <span class="icon-2"></span>
@@ -34,31 +44,8 @@
           <span class="icon-4"></span>
         </span>
       </div>
-      <div class="item-singer">
-        <span class="singer-text">隔壁老樊隔壁老樊隔壁老樊隔壁老樊</span>
-      </div>
-    </div>
-
-    <!-- 剩余样式 -->
-    <div class="item other-item">
-      <div class="item-sort other-sort">1</div>
-      <div class="item-name other-name">
-        <div class="item-name-wrap">
-          <span class="icon other-icon"></span>
-          <span class="music-name other-name">多想在平庸的生活拥抱你</span>
-        </div>
-      </div>
-      <div class="item-time other-time">
-        <span class="time-text">04:25</span>
-        <span class="btn">
-          <span class="icon-1"></span>
-          <span class="icon-2"></span>
-          <span class="icon-3"></span>
-          <span class="icon-4"></span>
-        </span>
-      </div>
-      <div class="item-singer other-singer">
-        <span class="singer-text">隔壁老樊隔壁老樊隔壁老樊隔壁老樊</span>
+      <div class="item-singer" :class="{'other-singer': i >= 3}">
+        <span class="singer-text">{{item.ar[0].name}}</span>
       </div>
     </div>
 
@@ -67,7 +54,21 @@
 
 <script>
 export default {
-  name: "MusicList"
+  name: "MusicList",
+  computed: {
+    musicList() {
+      let data = this.$store.state.topListData.data.playlist.tracks;
+      return data;
+    },
+    musicNum() {
+      let num = this.$store.state.topListData.data.playlist.tracks.length;
+      return num;
+    },
+    playCount() {
+      let playCount = this.$store.state.topListData.data.playlist.playCount;
+      return playCount;
+    }
+  }
 }
 </script>
 
@@ -148,7 +149,6 @@ export default {
     height: 69px;
     justify-content: center;
     font-size: 12px;
-    background-color: #f7f7f7;
   }
 
   .other-item {
@@ -326,5 +326,17 @@ export default {
   .singer-text:hover {
     text-decoration: underline;
     cursor: pointer;
+  }
+
+  .display-none {
+    display: none;
+  }
+
+  .bg-color-gray {
+    background: #f7f7f7;
+  }
+
+  .bg-color-white {
+    background: #ffffff;
   }
 </style>
