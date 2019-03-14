@@ -4,6 +4,9 @@
 # 进入 data 文件夹
 cd data
 
+# 初始化数据接口
+npm i
+
 # 执行 node 命令(开启获取数据端口)
 node app.js
 
