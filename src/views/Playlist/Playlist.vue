@@ -1,28 +1,19 @@
 <template>
-  <div class="play-list">
-    <NavBar></NavBar>
+  <div>
+    <PlayListHead/>
   </div>
 </template>
 
 <script>
-import NavBar from '../../components/NavBar'
+import PlayListHead from "./components/PlayListHead";
 
 export default {
   name: 'Playlist',
-  data() {
-    return {
-
-    }
-  },
   components: {
-    NavBar
-  },
-  created() {
-    // let id = this.$route.query.id;
-
-    // this.axios.get('/api/playlist/detail?id=' + id)
-    // .then(response => {
-    // })
+    PlayListHead
   }
 }
 </script>
+
+<style scoped>
+</style>
