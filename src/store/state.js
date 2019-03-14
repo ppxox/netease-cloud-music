@@ -12,5 +12,6 @@ export default {
   // 是否在播放
   playing: false,
   // 排行榜数据
-  topListData: null
+  topListData: null,
+  reviewData: null
 }

@@ -66,11 +66,13 @@ export default {
         let song = response.data.songs[0];
         this.$store.commit('pushMusic', song)
       })
+
       this.axios.get('/api/song/url?id=' + id)
       .then(response => {
         audio.pause();
         audio.src = response.data.data[0].url;
         audio.play();
+        this.$store.commit('changePlaying', true)
       })
     }
   }

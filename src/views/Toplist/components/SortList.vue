@@ -71,7 +71,13 @@ export default {
         this.$store.commit('changeTopListData', obj);
       })
 
-      location.hash = "#top";
+      this.axios.get('/api/comment/playlist?id=' + id)
+      .then(response => {
+        let data = response.data;
+        this.$store.commit('changeReview', data);
+      })
+
+      scrollTo(0, 0);
     },
     changeSecondClass(i, id, text) {
       this.sIndex = i;
@@ -85,7 +91,14 @@ export default {
         obj.text = text;
         this.$store.commit('changeTopListData', obj);
       })
-      location.hash = "#top";
+
+      this.axios.get('/api/comment/playlist?id=' + id)
+      .then(response => {
+        let data = response.data;
+        this.$store.commit('changeReview', data);
+      })
+
+      scrollTo(0, 0);
     }
   }
 }

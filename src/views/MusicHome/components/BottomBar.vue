@@ -1,6 +1,7 @@
 <template>
   <div class="bottom-bar">
     <div class="music-list" v-show="show" @mouseenter="showBar">
+      <div class="top-btn-wrap"><span @click="clearMusicList">清空列表({{musicListLength}}首)</span></div>
       <ul>
         <li
           class="item"
@@ -57,6 +58,9 @@ export default {
   computed: {
     musicList() {
       return this.$store.state.musicList;
+    },
+    musicListLength() {
+      return this.$store.state.musicList.length;
     }
   },
   methods: {
@@ -219,6 +223,14 @@ export default {
         this.musicAudio.play();
         this.$store.commit('changePlaying', true);
       });
+    },
+
+    // 清除播放列表
+    clearMusicList() {
+      this.musicAudio.pause();
+      this.musicAudio.src = null;
+      this.$store.commit('clearMusicList');
+      this.$store.commit('changePlaying', false);
     }
   }
 };
@@ -239,6 +251,22 @@ export default {
   margin-left: 170px;
   overflow: auto;
   border-radius: 2px 2px 0 0;
+}
+
+.top-btn-wrap {
+  height: 25px;
+  width: 100%;
+  color: #ffffff;
+  text-align: right;
+  font-size: 14px;
+  line-height: 25px;
+  padding-right: 5px;
+}
+
+.top-btn-wrap span:hover {
+  text-decoration: underline;
+  cursor: pointer;
+
 }
 
 .music-list::-webkit-scrollbar {

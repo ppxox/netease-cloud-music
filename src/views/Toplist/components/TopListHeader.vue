@@ -17,7 +17,7 @@
             <span class="update-time">（{{updated}}）</span>
           </div>
           <div class="button-list">
-            <span class="play-wrap">
+            <span class="play-wrap" @click="playAllMusic">
               <i>
                 <em class="play"></em>
                 播放
@@ -70,6 +70,22 @@ export default {
     updated() {
       let item = this.$store.state.topListData.text;
       return item;
+    }
+  },
+  methods: {
+    // 讲此排行榜的歌曲加入播放列表
+    playAllMusic() {
+      let list = this.$store.state.topListData.data.playlist.tracks;
+      this.$store.commit('addMusicList', list);
+
+      this.axios.get('/api/song/url?id=' + list[0].id)
+      .then(response => {
+        let url = response.data.data[0].url;
+        let musicAudio = this.$store.state.audio;
+        musicAudio.src = url;
+        musicAudio.play();
+        this.$store.commit('changePlaying', true);
+      })
     }
   }
 };

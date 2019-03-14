@@ -29,7 +29,7 @@
             <img :src="item.al.picUrl" class="auto-img">
           </div>
           <div class="display-none" v-else></div>
-          <span class="icon" :class="{'other-icon': i >= 3}"></span>
+          <span class="icon" :class="{'other-icon': i >= 3}" @click="playMusic(item.id)"></span>
           <span class="music-name" :class="{'other-name': i >= 3}">{{item.name}}</span>
         </div>
       </div>
@@ -67,6 +67,25 @@ export default {
     playCount() {
       let playCount = this.$store.state.topListData.data.playlist.playCount;
       return playCount;
+    }
+  },
+  methods: {
+    playMusic(id) {
+      let audio = this.$store.state.audio;
+
+      this.axios.get('/api/song/detail?ids=' + id)
+      .then(response => {
+        let song = response.data.songs[0];
+        this.$store.commit('pushMusic', song)
+      })
+
+      this.axios.get('/api/song/url?id=' + id)
+      .then(response => {
+        audio.pause();
+        audio.src = response.data.data[0].url;
+        audio.play();
+        this.$store.commit('changePlaying', true)
+      })
     }
   }
 }

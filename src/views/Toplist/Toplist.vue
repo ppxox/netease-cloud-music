@@ -1,6 +1,5 @@
 <template>
   <div class="top-list">
-    <a href="#top"></a>
     <div class="center-wrap">
 
       <div class="wrap-left">
@@ -11,6 +10,7 @@
       <div v-else class="wrap-right">
         <TopListHeader></TopListHeader>
         <MusicList></MusicList>
+        <Review></Review>
       </div>
 
     </div>
@@ -21,13 +21,15 @@
 import SortList from './components/SortList'
 import TopListHeader from './components/TopListHeader'
 import MusicList from './components/MusicList'
+import Review from './components/Review'
 
 export default {
   name: 'Toplist',
   components: {
     SortList,
     TopListHeader,
-    MusicList
+    MusicList,
+    Review
   },
   data() {
     return {
@@ -47,6 +49,12 @@ export default {
       if (ready) {
         this.createShow = false;
       }
+    })
+
+    this.axios.get('/api/comment/playlist?id=19723756')
+    .then(response => {
+      let data = response.data;
+      this.$store.commit('changeReview', data);
     })
   }
 }
