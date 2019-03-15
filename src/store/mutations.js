@@ -82,5 +82,15 @@ export default {
   // 修改排行榜评论
   changeReview(state, data) {
     state.reviewData = data;
+  },
+
+  // 修改歌单数据
+  changePlayListData(state, data) {
+    state.playListData = data;
+  },
+
+  // 修改分类名称
+  changeTypeName(state, str) {
+    state.typeName = str;
   }
 }

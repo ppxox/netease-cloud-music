@@ -1,19 +1,52 @@
 <template>
-  <div>
+  <div class="play-list">
     <PlayListHead/>
+    <MusicList v-if="show"/>
+    <div v-else></div>
   </div>
 </template>
 
 <script>
 import PlayListHead from "./components/PlayListHead";
+import MusicList from "./components/MusicList";
 
 export default {
   name: 'Playlist',
+  data() {
+    return {
+      show: false
+    }
+  },
   components: {
-    PlayListHead
+    PlayListHead,
+    MusicList
+  },
+  created() {
+    this.axios.get('/api/top/playlist?limit=35&order=hot')
+    .then(response => {
+      let data = response.data.playlists;
+      this.$store.commit('changePlayListData', data);
+      if (this.$store.state.playListData) {
+        this.show = true;
+      }
+    })
+  },
+  beforeRouteLeave (to, from, next) {
+    this.$store.commit('changeTypeName', '全部');
+    next();
   }
 }
 </script>
 
 <style scoped>
+  .play-list {
+    width: 980px;
+    min-height: 700px;
+    margin: 0 auto;
+    background-color: #fff;
+    border: 1px solid #d3d3d3;
+    border-width: 0 1px;
+    padding: 40px;
+    position: relative;
+  }
 </style>

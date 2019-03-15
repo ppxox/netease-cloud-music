@@ -13,5 +13,10 @@ export default {
   playing: false,
   // 排行榜数据
   topListData: null,
-  reviewData: null
+  // 排行榜评论数据
+  reviewData: null,
+  // 歌单数据
+  playListData: [],
+  // 歌单分类
+  typeName: '全部'
 }

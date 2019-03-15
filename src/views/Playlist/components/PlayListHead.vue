@@ -1,33 +1,57 @@
 <template>
-  <div class="play-list-head">
-    <div class="wrap">
-      <div class="head">
-        <h3>
-          <span>全部</span>
-          <span class="type-btn">选择分类</span>
-        </h3>
-        <div class="right-wrap">
-          <a class="hot">热门</a>
-          <a class="new">最新</a>
-        </div>
-      </div>
+  <div>
 
-      <div class="show">
-        <div class="show-head">
-          <span class="head-icon"></span>
-        </div>
-        <div class="show-body">
-
-          <h3><span>全部风格</span></h3>
-
-          <div class="row">
-            <div class="col-1">
-              <span class="icon-1"></span>语种</div>
-          </div>
-
-        </div>
+    <div class="head">
+      <h3>
+        <span>{{typeName}}</span>
+        <span class="type-btn" @click="showStatus">选择分类</span>
+      </h3>
+      <div class="right-wrap" :style="cutover ? 'background-position: 0 0;' : 'background-position: 0 -32px;'">
+        <a class="hot" :style="cutover ? 'color: #fff;' : 'color: #333;'" @click="cutoverTrue">热门</a>
+        <a class="new" :style="cutover ? 'color: #333;' : 'color: #fff;'" @click="cutoverFalse">最新</a>
       </div>
     </div>
+
+    <div class="show" v-show="show">
+      <div class="show-head">
+        <span class="head-icon"></span>
+      </div>
+      <div class="show-body">
+
+        <h3><router-link to="/discover/playlist" tag="span" @click.native="defaultType">全部风格</router-link></h3>
+
+        <div class="row" v-for="(item, index) in language" :key="index">
+          <div class="col-1">
+            <span
+              :class="{
+                'icon-1': index == 0,
+                'icon-2': index == 1,
+                'icon-3': index == 2,
+                'icon-4': index == 3,
+                'icon-5': index == 4
+                }"
+            ></span><span class="col-1-name">{{item}}</span>
+          </div>
+          <div class="col-2">
+            <div class="item-list">
+
+              <span class="item-wrap" v-for="(ele, i) in languageList[index]" :key="i">
+                <router-link
+                  :to="{path: '/discover/playlist', query: {cat: ele.name, order: cutover ? 'hot' : 'new', limit: 35}}"
+                  class="item"
+                  @click.native="changeName(ele.name)"
+                >{{ele.name}}</router-link>
+                <span class="line">|</span>
+              </span>
+
+            </div>
+          </div>
+        </div>
+
+      </div>
+      <div class="show-bottom"></div>
+    </div>
+
   </div>
 </template>
 
@@ -37,29 +61,71 @@ export default {
   name: 'PlayListHead',
   data() {
     return {
-
+      language: [],
+      languageList: [],
+      show: false,
+      cutover: true
     }
   },
   created() {
+    this.axios.get('/api/playlist/catlist')
+    .then(response => {
+      this.language = response.data.categories;
+      let list = response.data.sub;
+
+      for (let i = 0; i <= 4; i++) {
+        let oneLanguage = list.filter(e => {
+          if (e.category === i) {
+            return e
+          }
+        })
+
+        this.languageList.push(oneLanguage);
+      }
+
+    })
+  },
+  computed: {
+    typeName() {
+      return this.$store.state.typeName;
+    }
+  },
+  methods: {
+    showStatus() {
+      this.show = !this.show
+    },
+    changeName(name) {
+      this.$store.commit('changeTypeName', name);
+      this.show = false;
+
+      this.axios.get('/api/top/playlist/?cat=' + name + '&limit=35&order=hot')
+      .then(response => {
+        let data = response.data.playlists;
+        this.$store.commit('changePlayListData', data);
+      })
+    },
+    defaultType() {
+      let name = '全部';
+      this.$store.commit('changeTypeName', name);
+      this.show = false;
+
+      this.axios.get('/api/top/playlist/?cat=' + name + '&limit=35&order=hot')
+      .then(response => {
+        let data = response.data.playlists;
+        this.$store.commit('changePlayListData', data);
+      })
+    },
+    cutoverTrue() {
+      this.cutover = true;
+    },
+    cutoverFalse() {
+      this.cutover = false;
+    }
   }
 }
 </script>
 
 <style scoped>
-  .play-list-head {
-    width: 980px;
-    min-height: 700px;
-    margin: 0 auto;
-    background-color: #fff;
-    border: 1px solid #d3d3d3;
-    border-width: 0 1px;
-  }
-
-  .wrap {
-    padding: 40px;
-    position: relative;
-  }
-
   .head {
     height: 40px;
     position: relative;
@@ -186,23 +252,87 @@ export default {
   .row {
     display: flex;
     position: relative;
-    margin-top: 10px;
   }
 
   .col-1 {
     flex: 0 0 71px;
     margin-left: 26px;
+    border-right: 1px solid #e6e6e6;
   }
 
-  .icon-1 {
+  .col-2 {
+    flex: 1;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .icon-1,
+  .icon-2,
+  .icon-3,
+  .icon-4,
+  .icon-5 {
     background: url('../../../../public/img/icon.png') no-repeat;
     display: inline-block;
     overflow: hidden;
     vertical-align: middle;
     width: 23px;
     height: 23px;
-    background-position: -20px -735px;
     margin-right: 8px;
     margin-bottom: 4px;
+    margin-top: 10px;
+  }
+
+  .icon-1 {
+    background-position: -20px -735px;
+  }
+
+  .icon-2 {
+    background-position: 0 -60px;
+  }
+
+  .icon-3 {
+    background-position: 0 -88px;
+  }
+
+  .icon-4 {
+    background-position: 0 -117px;
+  }
+
+  .icon-5 {
+    background-position: 0 -141px;
+  }
+
+  .col-1-name {
+    display: inline-block;
+    position: relative;
+    font-weight: 600;
+    bottom: -4px;
+  }
+
+  .item-list {
+    padding: 10px 15px 0 25px;
+  }
+
+  .line {
+    margin: 0 8px 0 10px;
+    color: #d8d8d8;
+  }
+
+  .item-wrap {
+    display: inline-block;
+    word-break: break-word;
+    word-wrap: break-word;
+    line-height: 24px;
+  }
+
+  .item:hover {
+    text-decoration: underline;
+    cursor: pointer;
+  }
+
+  .show-bottom {
+    background: url('../../../../public/img/sltlyr.png') no-repeat;
+    height: 20px;
+    background-position: -1440px -12px;
   }
 </style>
