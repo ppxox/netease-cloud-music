@@ -3,12 +3,14 @@
     <PlayListHead/>
     <MusicList v-if="show"/>
     <div v-else></div>
+    <PlayListPager/>
   </div>
 </template>
 
 <script>
 import PlayListHead from "./components/PlayListHead";
 import MusicList from "./components/MusicList";
+import PlayListPager from "./components/PlayListPager";
 
 export default {
   name: 'Playlist',
@@ -19,16 +21,22 @@ export default {
   },
   components: {
     PlayListHead,
-    MusicList
+    MusicList,
+    PlayListPager
   },
   created() {
     this.axios.get('/api/top/playlist?limit=35&order=hot')
     .then(response => {
+
       let data = response.data.playlists;
+      let total = response.data.total;
+      this.$store.commit('changeTotalMusicList', total);
       this.$store.commit('changePlayListData', data);
+
       if (this.$store.state.playListData) {
         this.show = true;
       }
+
     })
   },
   beforeRouteLeave (to, from, next) {

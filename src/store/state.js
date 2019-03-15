@@ -18,5 +18,9 @@ export default {
   // 歌单数据
   playListData: [],
   // 歌单分类
-  typeName: '全部'
+  typeName: '全部',
+  // 歌单数量
+  totalMusicList: null,
+  // 分页器 active 索引
+  pagerIndex: 0
 }

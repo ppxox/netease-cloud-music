@@ -92,5 +92,15 @@ export default {
   // 修改分类名称
   changeTypeName(state, str) {
     state.typeName = str;
+  },
+
+  // 修改歌单数量
+  changeTotalMusicList(state, num) {
+    state.totalMusicList = num;
+  },
+
+  // 修改分页器 active 索引
+  changePagerIndex(state, num) {
+    state.pagerIndex = num;
   }
 }

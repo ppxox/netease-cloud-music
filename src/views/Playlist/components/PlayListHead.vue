@@ -101,6 +101,8 @@ export default {
       this.axios.get('/api/top/playlist/?cat=' + name + '&limit=35&order=hot')
       .then(response => {
         let data = response.data.playlists;
+        let total = response.data.total;
+        this.$store.commit('changeTotalMusicList', total);
         this.$store.commit('changePlayListData', data);
       })
     },
@@ -112,6 +114,8 @@ export default {
       this.axios.get('/api/top/playlist/?cat=' + name + '&limit=35&order=hot')
       .then(response => {
         let data = response.data.playlists;
+        let total = response.data.total;
+        this.$store.commit('changeTotalMusicList', total);
         this.$store.commit('changePlayListData', data);
       })
     },
