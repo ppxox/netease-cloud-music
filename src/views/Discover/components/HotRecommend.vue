@@ -8,8 +8,9 @@
           <i class="like" v-if="item.highQuality"></i>
           <router-link
             :to="{
-                              path: '/discover/playlist/detail',
-                              query: {id: item.id}}"
+              path: '/discover/playlist/detail',
+              query: {id: item.id}
+            }"
             class="link-wrap"
           ></router-link>
           <div class="bottom">

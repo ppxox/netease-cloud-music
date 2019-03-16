@@ -41,6 +41,9 @@ export default {
   },
   beforeRouteLeave (to, from, next) {
     this.$store.commit('changeTypeName', '全部');
+    this.$store.commit('changeTotalMusicList', null);
+    this.$store.commit('changePagerIndex', 0);
+    this.$store.commit('changepageNum', 1);
     next();
   }
 }

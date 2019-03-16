@@ -22,5 +22,7 @@ export default {
   // 歌单数量
   totalMusicList: null,
   // 分页器 active 索引
-  pagerIndex: 0
+  pagerIndex: 0,
+  // 页码
+  pageNum: 1
 }

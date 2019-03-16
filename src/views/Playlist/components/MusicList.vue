@@ -6,7 +6,7 @@
           <img class="auto-img" :src="item.coverImgUrl">
           <span class="cover"></span>
           <div class="bottom">
-            <span class="play-icon"></span>
+            <span class="play-icon" @click="playMusic(item.id)"></span>
             <span class="icon-headset"></span>
             <span class="num">{{(parseInt(item.playCount / 10000)) >= 10 ? (parseInt(item.playCount / 10000)) + '万' : (parseInt(item.playCount))}}</span>
           </div>
@@ -29,6 +29,53 @@ export default {
   computed: {
     musicList() {
       return this.$store.state.playListData;
+    }
+  },
+  methods: {
+    playMusic(id) {
+      this.axios.get("/api/playlist/detail?id=" + id).then(response => {
+        let list = response.data.playlist.tracks;
+        this.$store.commit("addMusicList", list);
+
+        this.$store.commit('changeIndex', 0);
+
+        let musicAudio = this.$store.state.audio;
+
+        let musicId = this.$store.state.musicList[0].id;
+
+        this.axios.get("/api/song/url?id=" + musicId)
+        .then(response => {
+          let musicUrl = response.data.data[0].url;
+          if (musicUrl === null) {
+            this.nextMusic();
+          }
+          musicAudio.src = musicUrl;
+          musicAudio.play();
+          this.$store.commit('changePlaying', true);
+        });
+
+        let self = this;
+
+        let endedListenerFun = function() {
+          self.$store.commit("addMusicIndex");
+          let index = self.$store.state.musicListIndex;
+          let id = self.$store.state.musicList[index].id;
+          self.axios.get('/api/song/url?id=' + id)
+          .then(response => {
+            let url = response.data.data[0].url;
+            if (url === null) {
+              self.nextMusic(self)
+            }
+            musicAudio.src = url;
+            musicAudio.play();
+            self.$store.commit('changePlaying', true);
+          })
+        };
+
+        musicAudio.addEventListener("ended", endedListenerFun);
+
+        this.$store.commit('changeEndedListener', endedListenerFun);
+      });
     }
   }
 }

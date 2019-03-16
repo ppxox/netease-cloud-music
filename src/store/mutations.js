@@ -102,5 +102,10 @@ export default {
   // 修改分页器 active 索引
   changePagerIndex(state, num) {
     state.pagerIndex = num;
+  },
+
+  // 修改分页码
+  changepageNum(state, num) {
+    state.pageNum = num;
   }
 }
