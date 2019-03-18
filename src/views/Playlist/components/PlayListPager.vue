@@ -1,12 +1,34 @@
 <template>
   <div>
     <div class="page-control">
-      <a
+
+      <router-link
+        :to="{
+          path: '/discover/playlist',
+          query: {
+            order: $route.query.order,
+            cat: $store.state.typeName,
+            limit: 35,
+            offset: ($route.query.offset - 35)
+          }
+        }"
         class="prev-page"
         :class="{'prev-page-active': pageNum > 1}"
-        @click="prevPage"
-      >上一页</a>
-      <a
+        @click.native="prevPage"
+      >
+        上一页
+      </router-link>
+
+      <router-link
+        :to="{
+          path: '/discover/playlist',
+          query: {
+            order: $route.query.order,
+            cat: $store.state.typeName,
+            limit: 35,
+            offset: ((item - 1) * 35)
+          }
+        }"
         :class="{
           'active': index === pagerIndex,
           'num': item !== '...',
@@ -14,9 +36,27 @@
         }"
         v-for="(item, index) in numList"
         :key="index"
-        @click="changePage(item)"
-      >{{item}}</a>
-      <a class="next-page" :class="{'next-page-active': pageNum === maxNum}" @click="nextPage">下一页</a>
+        @click.native="changePage(item)"
+      >
+        {{item}}
+      </router-link>
+
+      <router-link
+        :to="{
+          path: '/discover/playlist',
+          query: {
+            order: $route.query.order,
+            cat: $store.state.typeName,
+            limit: 35,
+            offset: ($route.query.offset + 35)
+          }
+        }"
+        class="next-page"
+        :class="{'next-page-active': pageNum === maxNum}"
+        @click.native="nextPage"
+      >
+        下一页
+      </router-link>
 
     </div>
 
@@ -26,19 +66,12 @@
 <script>
 export default {
   name: "PlayListPager",
-  data() {
-    return {
-      numList: [1, 2, 3, 4, 5, 6, 7, 8, '...'],
-      maxNum: null
-    }
-  },
   created() {
     this.axios.get('/api/top/playlist?limit=35&order=hot')
     .then(response => {
       let total = response.data.total;
       let maxNum = Math.ceil(total / 35);
-      this.maxNum = maxNum;
-      this.numList.push(maxNum);
+      this.$store.commit('changePageList', maxNum);
     })
 
   },
@@ -48,6 +81,12 @@ export default {
     },
     pageNum() {
       return this.$store.state.pageNum;
+    },
+    numList() {
+      return this.$store.state.pageList;
+    },
+    maxNum() {
+      return this.$store.state.maxNum;
     }
   },
   methods: {
@@ -61,7 +100,7 @@ export default {
 
         if (item <= 5) {
           let list = [1, 2, 3, 4, 5, 6, 7, 8, '...', this.maxNum];
-          this.numList = list;
+          this.$store.commit('updatePageList', list);
         }
 
         if (item >= 6 && item <= this.maxNum - 5) {
@@ -91,7 +130,7 @@ export default {
             this.maxNum - 1,
             this.maxNum
           ];
-          this.numList = list;
+          this.$store.commit('updatePageList', list);
         }
 
       }
@@ -126,12 +165,12 @@ export default {
             this.maxNum - 1,
             this.maxNum
           ];
-          this.numList = list;
+          this.$store.commit('updatePageList', list);
         }
 
         if (item < 6 && item > 0) {
           let list = [1, 2, 3, 4, 5, 6, 7, 8, '...', this.maxNum];
-          this.numList = list;
+          this.$store.commit('updatePageList', list);
         }
 
       }
@@ -145,10 +184,11 @@ export default {
       this.$store.commit('changepageNum', item);
 
       let typeName = this.$store.state.typeName;
+      let hotOrNew = this.$route.query.order;
       let page = item - 1;
       let startNum = page * 35;
 
-      this.axios.get(`/api/top/playlist/?order=hot&cat=${typeName}&limit=35&offset=${startNum}`)
+      this.axios.get(`/api/top/playlist/?cat=${typeName}&limit=35&offset=${startNum}&order=${hotOrNew}`)
       .then(response => {
         let data = response.data.playlists;
         this.$store.commit('changePlayListData', data);

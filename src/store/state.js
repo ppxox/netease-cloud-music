@@ -24,5 +24,9 @@ export default {
   // 分页器 active 索引
   pagerIndex: 0,
   // 页码
-  pageNum: 1
+  pageNum: 1,
+  // 分页器数组
+  pageList: [],
+  // 最大页数
+  maxNum: null
 }

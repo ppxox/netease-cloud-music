@@ -107,5 +107,18 @@ export default {
   // 修改分页码
   changepageNum(state, num) {
     state.pageNum = num;
+  },
+
+  // 初始修改分页数组
+  changePageList(state, item) {
+    let list = [1, 2, 3, 4, 5, 6, 7, 8, '...'];
+    list.push(item);
+    state.pageList = list;
+    state.maxNum = item;
+  },
+
+  // 再次修改数组
+  updatePageList(state, list) {
+    state.pageList = list;
   }
 }

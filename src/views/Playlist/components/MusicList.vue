@@ -76,6 +76,23 @@ export default {
 
         this.$store.commit('changeEndedListener', endedListenerFun);
       });
+    },
+
+    nextMusic(self) {
+      self.$store.commit("addMusicIndex");
+
+      let index = self.$store.state.musicListIndex;
+      let id = self.$store.state.musicList[index].id;
+
+      self.axios.get("/api/song/url?id=" + id).then(response => {
+        let musicUrl = response.data.data[0].url;
+        if (musicUrl === null) {
+          self.nextMusic();
+        }
+        self.musicAudio.src = musicUrl;
+        self.musicAudio.play();
+        self.$store.commit('changePlaying', true);
+      });
     }
   }
 }

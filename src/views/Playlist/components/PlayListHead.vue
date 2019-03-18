@@ -6,9 +6,41 @@
         <span>{{typeName}}</span>
         <span class="type-btn" @click="showStatus">选择分类</span>
       </h3>
-      <div class="right-wrap" :style="cutover ? 'background-position: 0 0;' : 'background-position: 0 -32px;'">
-        <a class="hot" :style="cutover ? 'color: #fff;' : 'color: #333;'" @click="cutoverTrue">热门</a>
-        <a class="new" :style="cutover ? 'color: #333;' : 'color: #fff;'" @click="cutoverFalse">最新</a>
+      <div
+        class="right-wrap"
+        :style="cutover ? 'background-position: 0 0;' : 'background-position: 0 -32px;'"
+      >
+
+        <router-link
+          :to="{
+            path: '/discover/playlist',
+            query: {
+              order: 'hot',
+              cat: $store.state.typeName
+            }
+          }"
+          class="hot"
+          :style="cutover ? 'color: #fff;' : 'color: #333;'"
+          @click.native="cutoverTrue"
+        >
+          热门
+        </router-link>
+
+        <router-link
+          :to="{
+            path: '/discover/playlist',
+            query: {
+              order: 'new',
+              cat: $store.state.typeName
+            }
+          }"
+          class="new"
+          :style="cutover ? 'color: #333;' : 'color: #fff;'"
+          @click.native="cutoverFalse"
+        >
+          最新
+        </router-link>
+
       </div>
     </div>
 
@@ -121,9 +153,37 @@ export default {
     },
     cutoverTrue() {
       this.cutover = true;
+
+      let name = this.$store.state.typeName;
+
+      this.axios.get('/api/top/playlist/?cat=' + name + '&limit=35&order=hot&offset=0')
+      .then(response => {
+        let data = response.data.playlists;
+        let total = response.data.total;
+        let maxNum = Math.ceil(total / 35);
+        this.$store.commit('changePageList', maxNum);
+        this.$store.commit('changePagerIndex', 0);
+        this.$store.commit('changepageNum', 1);
+        this.$store.commit('changePlayListData', data);
+      })
+
     },
     cutoverFalse() {
       this.cutover = false;
+
+      let name = this.$store.state.typeName;
+
+      this.axios.get('/api/top/playlist/?cat=' + name + '&limit=35&order=new&offset=0')
+      .then(response => {
+        let data = response.data.playlists;
+        let total = response.data.total;
+        let maxNum = Math.ceil(total / 35);
+        this.$store.commit('changePageList', maxNum);
+        this.$store.commit('changePagerIndex', 0);
+        this.$store.commit('changepageNum', 1);
+        this.$store.commit('changePlayListData', data);
+      })
+
     }
   }
 }
